@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/stylesheet.css">
+<html>
+    <head>
+        <title>Basic Template</title>
+    </head>
+
+    <body>
+
+        <div id='shopping-list'>
+            <div class="header">
+                <h1>{{header.toLocaleUpperCase()}}</h1>
+                <button v-if="state==='default'" class='btn btn-primary' @click="changeState('edit')">Add Item</button>
+                <button v-else class="btn btn-cancel" @click="changeState('default')">Cancel</button>
+            </div>
+            <div v-if="state==='edit'" class='add-item-form'>
+                <input v-model = 'newItem' type='text' placeholder="insert new item here" @keyup.enter="saveItem">
+                <button class='btn btn-primary' :disabled="newItem.length===0" @click="saveItem">Save Item</button>
+            </div>
+            <ul>
+                <li v-for = "item in items" :class="{strikeout: item.purchased}" @click="togglePurchased(item)">{{item.label}}</li>
+            </ul>
+            <p v-if="items.length===0">Nice job! You've bought all your items!</p>
+        </div>
+
+
+        <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <script src="javascript/script.js"></script>
+        <script src="http://unpkg.com/vue"></script>
+
+        <script>
+            var shoppinglist = new Vue({ 
+                el: '#shopping-list',
+                data: {
+                    state: 'default',
+                    header: 'Shopping List Application',
+                    newItem: '', 
+                    items: [
+                        {
+                            label: "1 pint of milk",
+                            purchased: false,
+                            highPriority: false,
+                        },
+                        {
+                            label: "3 eggs",
+                            purchased: false,
+                            highPriority: true,
+                        },
+                        {
+                            label: "cereal",
+                            purchased: true,
+                            highPriority: false,
+                        },
+                    ]
+                },
+                
+                methods: {
+                    saveItem: function(){
+                        this.items.push({
+                            label: this.newItem,
+                            purchased: false,
+                        });
+                        this.newItem = "";
+                    },
+
+                    changeState: function(newState) {
+                        this.state = newState;
+                        this.newItem = '';
+                    },
+
+                    togglePurchased: function(item) {
+                        item.purchased = !item.purchased;
+                    }
+                }
+            })
+
+        </script>
+
+    </body>
+
+</html>
